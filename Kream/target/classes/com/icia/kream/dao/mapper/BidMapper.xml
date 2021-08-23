@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="bidm">
+
+	<!-- 구매 입찰 페이지 이동 + 구매 입찰 리스트 출력 + 갯수 확인 -->
+	<select id="listcount" resultType="int">
+		SELECT COUNT(BIDNUMBER) FROM
+		BID WHERE BIDPNUMBER=#{bidpnumber}
+	</select>
+
+	<!-- 구매 입찰 페이지 이동 + 구매 입찰 리스트 출력 + 리스트 -->
+	<select id="bidpage" parameterType="java.util.HashMap" resultType="biddto">
+		SELECT *
+		FROM (SELECT B.*, ROW_NUMBER() OVER(ORDER BY
+		BIDPRICE DESC)
+		AS RN FROM
+		BID B) WHERE BIDPNUMBER=#{bidpnumber} AND RN BETWEEN #{startRow}
+		AND
+		#{endRow}
+	</select>
+
+	<!-- 구매 입찰 등록하기 -->
+	<insert id="bidinput" parameterType="biddto">
+		INSERT INTO BID
+		(BIDNUMBER,BIDPNUMBER,BIDID,BIDPRICE,BIDSIZE) VALUES
+		(BID_SEQ.NEXTVAL,#{bidpnumber},#{bidid},#{bidprice},#{bidsize})
+	</insert>
+
+	<!-- 구매 입찰 아이디 중복 확인 -->
+	<select id="bididcheck" parameterType="String"
+		resultType="String">
+		SELECT BIDID FROM BID WHERE BIDID=#{bidid} AND BIDPNUMBER=#{bidpnumber}
+	</select>
+
+	<!-- 구매 입찰 내용 수정 요청 -->
+	<select id="bidupdate" parameterType="int" resultType="biddto">
+		SELECT *
+		FROM BID WHERE BIDNUMBER=#{bidnumber}
+	</select>
+
+	<!-- 구매 입찰 내용 수정 -->
+	<update id="bidupdateprocess" parameterType="biddto">
+		UPDATE BID
+		SET
+		BIDPRICE=#{bidprice}, BIDSIZE=#{bidsize} WHERE
+		BIDNUMBER=#{bidnumber}
+	</update>
+
+	<!-- 마이페이지 + 구매 입찰 한 리스트 출력 + 갯수 확인 -->
+	<select id="bidlistcount" parameterType="String"
+		resultType="int">
+		SELECT COUNT(BIDNUMBER) FROM
+		BID WHERE BIDID=#{bidid}
+	</select>
+
+	<!-- 마이페이지 + 구매 입찰 한 리스트 출력 -->
+	<select id="bididpage" parameterType="java.util.HashMap"
+		resultType="biddto">
+		SELECT *
+		FROM (SELECT B.*, ROW_NUMBER() OVER(ORDER BY
+		BIDPRICE DESC)
+		AS RN FROM
+		BID B) WHERE BIDID=#{bidid} AND RN BETWEEN
+		#{startRow}
+		AND
+		#{endRow}
+	</select>
+
+	<!-- 구매 입찰 취소 -->
+	<delete id="biddelete" parameterType="int">
+		DELETE FROM BID
+		WHERE BIDNUMBER=#{bidnumber}
+	</delete>
+
+</mapper>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

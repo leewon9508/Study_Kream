@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mm">
+	<insert id="memberjoin" parameterType="memberdto"> 
+		INSERT INTO MEMBER(MID,MPASSWORD, MNAME, MPHONE, MACCOUNT) 
+			VALUES(#{mid}, #{mpassword}, #{mname}, #{mphone}, 0) 
+	</insert>
+	
+	<select id="idcheck" parameterType="String" resultType="String"> 
+		SELECT MID FROM MEMBER WHERE MID=#{mid} 
+	</select>
+	
+	<select id="memberlogin" parameterType="memberdto" resultType="String"> 
+		SELECT MID FROM MEMBER WHERE MID=#{mid} AND MPASSWORD=#{mpassword} 
+	</select>
+	
+	<select id="memberloginname" parameterType="memberdto" resultType="String"> 
+		SELECT MNAME FROM MEMBER WHERE MID=#{mid} AND MPASSWORD=#{mpassword} 
+	</select>
+	
+	<select id="memberupdate" parameterType="String" resultType="memberdto"> 
+		SELECT * FROM MEMBER WHERE MID=#{loginId} 
+	</select>
+	
+	<update id="updateprocess" parameterType="memberdto"> 
+		UPDATE MEMBER SET MPASSWORD=#{mpassword}, MNAME=#{mname}, MPHONE=#{mphone} 
+			WHERE MID=#{mid} 
+	</update>
+	
+	<select id="memberlist" resultType="memberdto"> 
+		SELECT * FROM MEMBER WHERE MID NOT IN 'admin' ORDER BY MID ASC 
+	</select>
+	
+	<select id="memberview" parameterType="String" resultType="memberdto"> 
+		SELECT * FROM MEMBER WHERE MID=#{mid} 
+	</select>
+	
+	<delete id="memberdelete" parameterType="String"> 
+		DELETE FROM MEMBERWHERE MID=#{mid} 
+	</delete>
+	
+	<select id="idfindprocess" parameterType="String" resultType="memberdto">
+		SELECT * FROM MEMBER WHERE MPHONE=#{mphone} 
+	</select>
+	
+	<select id="findByMid" parameterType="String" resultType="memberdto"> 
+		SELECT * FROM MEMBER WHERE MID=#{mid} 
+	</select>
+	
+</mapper>
+

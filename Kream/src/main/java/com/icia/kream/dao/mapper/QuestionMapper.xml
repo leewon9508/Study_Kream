@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="qm">
+	<!-- 1대1 문의 글 + 갯수 -->
+	<select id="listcount" resultType="int">
+		SELECT COUNT(QNUMBER) FROM
+		QUESTION
+	</select>
+
+	<!-- 1대1 문의 글 + 목록 -->
+	<select id="questionlist" parameterType="pagedto"
+		resultType="questiondto">
+		SELECT * FROM (SELECT B.*, ROW_NUMBER() OVER(ORDER BY
+		QNUMBER DESC)
+		AS RN FROM QUESTION B) WHERE RN BETWEEN #{startRow}
+		AND
+		#{endRow}
+	</select>
+
+	<!-- 1대1 문의 글 작성 -->
+	<insert id="questionwrite" parameterType="questiondto">
+		INSERT INTO QUESTION
+		(QNUMBER, QWRITER, QTITLE, QCONTENTS, QDATE)
+		VALUES(QUESTION_SEQ.NEXTVAL,
+		#{qwriter},#{qtitle},#{qcontents},SYSDATE)
+	</insert>
+
+	<!-- 1대1 문의 글 조회 -->
+	<select id="questionview" parameterType="int"
+		resultType="questiondto">
+		SELECT * FROM QUESTION WHERE QNUMBER=#{qnumber}
+	</select>
+
+	<!-- 1대1 문의 글 삭제 -->
+	<delete id="questiondelete" parameterType="int">
+		DELETE FROM QUESTION
+		WHERE QNUMBER=#{qnumber}
+	</delete>
+
+	<!-- 1대1 문의 글 수정 요청 -->
+	<select id="questionupdate" parameterType="int"
+		resultType="questiondto">
+		SELECT * FROM QUESTION WHERE QNUMBER=#{qnumber}
+	</select>
+
+	<!-- 1대1 문의 글 수정 처리 -->
+	<update id="questionupdateprocess" parameterType="questiondto">
+		UPDATE QUESTION
+		SET QWRITER=#{qwriter}, QTITLE=#{qtitle}, QCONTENTS=#{qcontents} WHERE
+		QNUMBER=#{qnumber}
+	</update>
+
+</mapper>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

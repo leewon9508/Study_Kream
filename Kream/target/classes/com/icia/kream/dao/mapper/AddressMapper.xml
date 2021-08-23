@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="addm">
+	<!-- 주소 등록 -->
+	<insert id="addresswrite" parameterType="addressdto">
+		INSERT INTO ADDRESS
+		(ID,POSTCODE,ROAD,JIBUN,DETAIL,EXTRA) VALUES
+		(#{id},#{postcode},#{road},#{jibun},#{detail},#{extra})
+	</insert>
+
+	<!-- 주소 상세 조회 -->
+	<select id="addressview" parameterType="String"
+		resultType="addressdto">
+		SELECT * FROM ADDRESS WHERE ID=#{id}
+	</select>
+
+
+	<!-- 주소 삭제 -->
+	<delete id="addressdelete" parameterType="String">
+		DELETE FROM ADDRESS
+		WHERE ID=#{id}
+	</delete>
+</mapper>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

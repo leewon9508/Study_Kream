@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ <mapper namespace="km"> 
+	<!-- 찜등록 -->
+	<insert id="jjim" parameterType="java.util.HashMap">
+		INSERT INTO KEEP(KNUMBER,KID,KPNUMBER)
+		 VALUES(KEEP_SEQ.NEXTVAL,#{kid},#{kpnumber})
+	</insert>
+	
+	<!-- 찜등록시 상품중복체크 
+	이 쿼리가 동일 아이디가 동일 상품에 찜을 못하게 하자는거죠? 그러면 kpnumber랑 kid 둘다 조건을 만족하는지 확인해야 하지 않을까?-->
+	<select id="id" parameterType="java.util.HashMap" resultType="String">
+		SELECT KID FROM KEEP WHERE KPNUMBER=#{kpnumber} AND KID=#{kid}
+	</select>
+	
+	<!-- 찜삭제 -->
+	<delete id="jjimdelete" parameterType="java.util.HashMap">
+		DELETE FROM KEEP WHERE KNUMBER=#{knumber}
+	</delete>
+	
+	
+	<!-- 찜목록 -->
+	<resultMap type="productdto" id="productdto">
+		<result column="pbrand" property="pbrand"/>
+		<result column="pname" property="pname"/>
+		<result column="pfilename" property="pfilename"/>
+	</resultMap>
+	<resultMap type="keepdto" id="keepdto">
+		<result column="knumber" property="knumber"/>
+		<collection property="productdto" resultMap="productdto"/>
+	</resultMap>
+	
+	<select id="keeplist" parameterType="String" resultMap="keepdto">
+		SELECT K.knumber,P.pbrand,p.pname,p.pfilename
+		FROM KEEP K LEFT JOIN PRODUCT P
+		ON K.KPNUMBER = P.PNUMBER
+		WHERE KID=#{kid}
+	</select>
+	
+ </mapper>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

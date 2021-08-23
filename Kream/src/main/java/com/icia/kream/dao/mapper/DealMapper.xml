@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="dealm">
+
+	<!-- 거래 상세 조회 -->
+	<select id="dealview" parameterType="int" resultType="dealdto">
+		SELECT *
+		FROM DEAL WHERE DNUMBER=#{dnumber}
+	</select>
+
+	<!-- 거래 관리 데이터 추가 하기 -->
+	<insert id="dealwrite" parameterType="dealdto">
+		INSERT INTO DEAL
+		(DNUMBER,
+		DBIDID, DASKID, DPNUMBER, DSIZE, DDATE,
+		DPRICE)
+		VALUES(DEAL_SEQ.NEXTVAL,
+		#{dbidid},#{daskid},#{dpnumber},#{dsize},SYSDATE,#{dprice})
+
+		<selectKey resultType="int" keyProperty="dnumber"
+			order="AFTER">
+			SELECT MAX(dnumber) FROM DEAL
+		</selectKey>
+	</insert>
+
+	<!-- 구매 내역 갯수 -->
+	<select id="bidlistcount" parameterType="String"
+		resultType="int">
+		SELECT COUNT(DBIDID) FROM
+		DEAL WHERE DBIDID=#{dbidid}
+	</select>
+
+	<!-- 구매 내역 리스트 -->
+	<select id="bidhistory" parameterType="java.util.HashMap"
+		resultType="dealdto">
+		SELECT *
+		FROM (SELECT B.*, ROW_NUMBER() OVER(ORDER BY
+		DNUMBER DESC)
+		AS RN FROM
+		DEAL B) WHERE DBIDID=#{dbidid} AND RN BETWEEN
+		#{startRow}
+		AND
+		#{endRow}
+	</select>
+
+	<!-- 구매 내역 갯수 -->
+	<select id="asklistcount" parameterType="String"
+		resultType="int">
+		SELECT COUNT(DBIDID) FROM
+		DEAL WHERE DASKID=#{daskid}
+	</select>
+
+	<!-- 구매 내역 리스트 -->
+	<select id="askhistory" parameterType="java.util.HashMap"
+		resultType="dealdto">
+		SELECT *
+		FROM (SELECT B.*, ROW_NUMBER() OVER(ORDER BY
+		DNUMBER DESC)
+		AS RN FROM
+		DEAL B) WHERE DASKID=#{daskid} AND RN BETWEEN
+		#{startRow}
+		AND
+		#{endRow}
+	</select>
+
+
+
+
+</mapper>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

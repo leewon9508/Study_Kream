@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="pim">
+	<!-- 포인트 충전 -->
+	<update id="pointaccount" parameterType="memberdto">
+		UPDATE
+		MEMBER SET
+		MACCOUNT=MACCOUNT + #{maccount} WHERE MID=#{mid}
+	</update>
+
+	<!-- 포인트 수정 후 상세 조회 -->
+	<select id="memberpoint" parameterType="String"
+		resultType="memberdto">
+		SELECT * FROM MEMBER WHERE MID=#{mid}
+	</select>
+
+	<!-- 포인트 충전 후 ACCOUNT 테이블 데이터 추가 -->
+	<insert id="pointaccountplus" parameterType="accountdto">
+		INSERT INTO ACCOUNT
+		(ANUMBER,MID,MACCOUNT,ADATE) VALUES
+		(ACCOUNT_SEQ.NEXTVAL,#{mid},#{maccount},SYSDATE)
+	</insert>
+
+	<!-- 포인트 충전 갯수 -->
+	<select id="listcount" parameterType="String" resultType="int">
+		SELECT
+		COUNT(ANUMBER) FROM
+		ACCOUNT WHERE MID=#{mid}
+	</select>
+
+	<!-- 포인트 충전 내역 조회 -->
+	<select id="pointaccountlist" parameterType="java.util.HashMap"
+		resultType="accountdto">
+		SELECT * FROM (SELECT B.*, ROW_NUMBER() OVER(ORDER BY
+		ANUMBER DESC)
+		AS RN FROM ACCOUNT B) WHERE MID=#{mid} AND RN BETWEEN
+		#{startRow}
+		AND
+		#{endRow}
+	</select>
+	
+	<!-- 포인트 사용 내역 보기 (구매) + 갯수 -->
+	<select id="uselistcount" parameterType="String" resultType="int">
+		SELECT
+		COUNT(DBIDID) FROM
+		DEAL WHERE DBIDID=#{dbidid}
+	</select>
+
+	<!-- 포인트 사용 내역 보기 (구매) + 리스트 -->
+	<select id="pointaccountuselist" parameterType="java.util.HashMap"
+		resultType="dealdto">
+		SELECT * FROM (SELECT B.*, ROW_NUMBER() OVER(ORDER BY
+		DDATE DESC)
+		AS RN FROM DEAL B) WHERE DBIDID=#{dbidid} AND RN BETWEEN
+		#{startRow}
+		AND
+		#{endRow}
+	</select>
+
+	<!-- 즉시 구매 or 판매 + Member 잔액 확인 -->
+	<select id="pointcheck" parameterType="java.util.HashMap"
+		resultType="String">
+		SELECT MID FROM MEMBER WHERE MID=#{mid} AND MACCOUNT >=
+		#{maccount}
+	</select>
+
+
+	<!-- 즉시 구매 + 구매자 포인트 감소 -->
+	<update id="pointminus" parameterType="memberdto">
+		UPDATE
+		MEMBER
+		SET
+		MACCOUNT=MACCOUNT - #{maccount} WHERE MID=#{mid}
+	</update>
+
+	<!-- 즉시 구매 + member 포인트 + 결과 확인 -->
+	<select id="memberpointresult" parameterType="String"
+		resultType="memberdto">
+		SELECT MACCOUNT FROM MEMBER WHERE MID=#{mid}
+	</select>
+
+	<!-- 즉시 구매 + 판매자 포인트 증가 -->
+	<update id="pointplus" parameterType="memberdto">
+		UPDATE
+		MEMBER
+		SET
+		MACCOUNT=MACCOUNT + #{maccount} WHERE MID=#{mid}
+	</update>
+
+	<select id="pointpage" parameterType="String"
+		resultType="memberdto">
+		SELECT * FROM MEMBER WHERE MID=#{mid}
+	</select>
+</mapper>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

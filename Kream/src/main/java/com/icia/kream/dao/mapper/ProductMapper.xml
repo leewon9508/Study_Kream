@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ <mapper namespace="pm"> 
+	<insert id="registrationprocess" parameterType="productdto">
+		INSERT INTO PRODUCT(PNUMBER,PNAME,PBRAND,PRETAIL,PFILENAME)
+		 VALUES(#{pnumber},#{pname},#{pbrand},#{pretail},#{pfilename})
+	</insert> 
+	
+	<select id="productpaging" parameterType="pagedto" resultType="productdto">
+		SELECT * FROM (SELECT P.*, ROW_NUMBER() OVER(ORDER BY PNUMBER DESC)
+			AS RN FROM PRODUCT P) WHERE RN BETWEEN #{startRow} AND #{endRow}
+	</select>
+	
+	<select id="productview" parameterType="int" resultType="productdto">
+		SELECT * FROM PRODUCT WHERE PNUMBER=#{pnumber}
+	</select>
+	
+	<select id="listcount" resultType="int">
+		SELECT COUNT(PNUMBER) FROM PRODUCT
+	</select>
+	
+	<update id="productupdate" parameterType="productdto">
+		UPDATE PRODUCT SET PNAME=#{pname}, PBRAND=#{pbrand}, PRETAIL=#{pretail} WHERE PNUMBER=#{pnumber}
+	</update>
+	
+	<delete id="productdelete" parameterType="int">
+		DELETE FROM PRODUCT WHERE PNUMBER=#{pnumber}
+	</delete>
+
+	<!-- 검색 -->
+	<select id="productserch" parameterType="java.util.HashMap"
+		resultType="productdto">
+		SELECT * FROM PRODUCT
+		<include refid="search"></include>
+	</select>
+
+	<!-- 검색 게시글 갯수 가지고 오기 -->
+	<select id="slistcount" parameterType="java.util.HashMap"
+		resultType="int">
+		SELECT COUNT(PNUMBER) FROM
+		PRODUCT
+		<include refid="search"></include>
+	</select>
+
+	<!-- 검색 sproductpaging 가져오기 -->
+	<select id="sproductpaging" parameterType="java.util.HashMap"
+		resultType="productdto">
+		SELECT * FROM (SELECT B.*, ROW_NUMBER() OVER(ORDER BY PNUMBER DESC)
+		AS
+		RN FROM PRODUCT B)
+		<include refid="search"></include>
+		AND RN BETWEEN #{startRow}
+		AND #{endRow}
+	</select>
+
+	
+	<sql id="search">
+		<choose>
+			<when test="type=='pname'">
+				WHERE PNAME LIKE '%'||#{word}||'%'
+			</when>
+			<when test="type=='pbrand'">
+				WHERE PBRAND LIKE '%'||#{word}||'%'
+			</when>
+		</choose>
+	</sql>
+	
+ </mapper>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

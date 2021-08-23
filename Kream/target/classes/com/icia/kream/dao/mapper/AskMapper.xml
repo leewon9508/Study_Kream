@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="askm">
+
+	<!-- 판매 입찰 페이지 이동 + 구매 입찰 리스트 출력 + 갯수 확인 -->
+	<select id="listcount" parameterType="int" resultType="int">
+		SELECT COUNT(ASKNUMBER) FROM
+		ASK WHERE ASKPNUMBER=#{askpnumber}
+	</select>
+
+	<!-- 판매 입찰 페이지 이동 + 구매 입찰 리스트 출력 + 리스트 -->
+	<select id="askpage" parameterType="java.util.HashMap" resultType="askdto">
+		SELECT *
+		FROM (SELECT B.*, ROW_NUMBER() OVER(ORDER BY
+		ASKPRICE DESC)
+		AS RN FROM
+		ASK B) WHERE ASKPNUMBER=#{askpnumber} AND RN BETWEEN #{startRow}
+		AND
+		#{endRow}
+	</select>
+
+	<!-- 판매 입찰 등록하기 -->
+	<insert id="askinput" parameterType="askdto">
+		INSERT INTO ASK
+		(ASKNUMBER,ASKPNUMBER,ASKID,ASKPRICE,ASKSIZE) VALUES
+		(ASK_SEQ.NEXTVAL,#{askpnumber},#{askid},#{askprice},#{asksize})
+	</insert>
+
+	<!-- 판매 입찰 아이디 중복 확인 -->
+	<select id="askidcheck" parameterType="String"
+		resultType="String">
+		SELECT ASKID FROM ASK WHERE ASKID=#{askid} AND ASKPNUMBER=#{askpnumber}
+	</select>
+
+	<!-- 판매 입찰 내용 수정 요청 -->
+	<select id="askupdate" parameterType="int" resultType="askdto">
+		SELECT *
+		FROM ASK WHERE ASKNUMBER=#{asknumber}
+	</select>
+
+	<!-- 판매 입찰 내용 수정 -->
+	<update id="askupdateprocess" parameterType="askdto">
+		UPDATE ASK
+		SET
+		ASKPRICE=#{askprice}, ASKSIZE=#{asksize} WHERE
+		ASKNUMBER=#{asknumber}
+	</update>
+
+	<!-- 마이페이지 + 판매 입찰 한 리스트 출력 + 갯수 확인 -->
+	<select id="asklistcount" parameterType="String"
+		resultType="int">
+		SELECT COUNT(ASKNUMBER) FROM
+		ASK WHERE ASKID=#{askid}
+	</select>
+
+	<!-- 마이페이지 + 판매 입찰 한 리스트 출력 -->
+	<select id="askidpage" parameterType="java.util.HashMap"
+		resultType="askdto">
+		SELECT *
+		FROM (SELECT B.*, ROW_NUMBER() OVER(ORDER BY
+		ASKPRICE DESC)
+		AS RN FROM
+		ASK B) WHERE ASKID=#{askid} AND RN BETWEEN
+		#{startRow}
+		AND
+		#{endRow}
+	</select>
+
+	<!-- 판매 입찰 취소 -->
+	<delete id="askdelete" parameterType="int">
+		DELETE FROM ASK
+		WHERE
+		ASKNUMBER=#{asknumber}
+	</delete>
+
+</mapper>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+	<settings>
+		<setting name="jdbcTypeForNull" value="NULL" />
+	</settings>
+
+	<typeAliases>
+		<!-- 회원 -->
+		<typeAlias type="com.icia.kream.dto.MemberDTO" alias="memberdto" />
+		<!-- 주소 -->
+		<typeAlias type="com.icia.kream.dto.AddressDTO" alias="addressdto" />
+		<!-- 공지사항 -->
+		<typeAlias type="com.icia.kream.dto.NoticeDTO" alias="noticedto" />
+		<!-- 페이지 -->
+		<typeAlias type="com.icia.kream.dto.PageDTO" alias="pagedto" />
+		<!-- 문의사항 -->
+		<typeAlias type="com.icia.kream.dto.QuestionDTO" alias="questiondto" />
+		<!-- 댓글 -->
+		<typeAlias type="com.icia.kream.dto.CommentDTO" alias="commentdto" />
+		<!-- 충전 내역 -->
+		<typeAlias type="com.icia.kream.dto.AccountDTO" alias="accountdto" />
+		<!-- 상품 -->
+		<typeAlias type="com.icia.kream.dto.ProductDTO" alias="productdto" />
+		<!-- 구매 -->
+		<typeAlias type="com.icia.kream.dto.BidDTO" alias="biddto" />
+		<!-- 판매 -->
+		<typeAlias type="com.icia.kream.dto.AskDTO" alias="askdto" />
+		<!-- 주문 -->
+		<typeAlias type="com.icia.kream.dto.DealDTO" alias="dealdto" />
+		<!-- 찜 -->
+		<typeAlias type="com.icia.kream.dto.KeepDTO" alias="keepdto" />
+	</typeAliases>
+</configuration>

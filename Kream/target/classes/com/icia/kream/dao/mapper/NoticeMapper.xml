@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="nt">
+
+	<!-- 고객센터 페이지 이동 + 공지사항 목록 출력 + 글 갯수 -->
+	<select id="listcount" resultType="int">
+		SELECT COUNT(NNUMBER) FROM
+		NOTICE
+	</select>
+
+	<!-- 고객센터 페이지 이동 + 공지사항 목록 출력 + 리스트 -->
+	<select id="noticepage" parameterType="pagedto"
+		resultType="noticedto">
+		SELECT * FROM (SELECT B.*, ROW_NUMBER() OVER(ORDER BY
+		NNUMBER DESC)
+		AS RN FROM NOTICE B) WHERE RN BETWEEN #{startRow}
+		AND #{endRow}
+	</select>
+
+	<!-- 공지사항 작성 -->
+	<insert id="noticewrite" parameterType="noticedto">
+		INSERT INTO
+		NOTICE(NNUMBER,NWRITER,NTITLE,NCONTENTS,NDATE)
+		VALUES(NOTICE_SEQ.NEXTVAL,#{nwriter},#{ntitle},#{ncontents},SYSDATE)
+	</insert>
+
+	<!-- 공지사항 조회 -->
+	<select id="noticeview" parameterType="int"
+		resultType="noticedto">
+		SELECT *
+		FROM NOTICE WHERE NNUMBER=#{nnumber}
+	</select>
+	
+	<!-- 공지사항 글 삭제 (관리자 전용) -->
+	<delete id="noticedelete" parameterType="int">
+		DELETE FROM NOTICE WHERE NNUMBER=#{nnumber}
+	</delete>
+</mapper>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
